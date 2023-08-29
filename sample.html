@@ -20,7 +20,7 @@
             <span id="alert-text"></span>
         </div>
         <div id="alertbox2" class="alert-box">
-            <button class="closebtn" id="closebtn" onclick="closealert()">X</button>
+            <button class="closebtn" id="closebtn1" onclick="closealert1()">X</button>
             <br>
             <span id="alert-text">Do you want to register as new user?</span>
             <div class="buttons">
@@ -198,6 +198,12 @@
         function closealert() {
             document.getElementById("alertbox").style.display = "none";
         }
+
+        function closealert1() {
+            document.getElementById("alertbox2").style.display = "none";
+        }
+        
+
 
         function classRemoverEmail() {
             emailInput.classList.remove('invalid');
