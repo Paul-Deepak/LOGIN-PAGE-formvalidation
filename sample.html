@@ -10,26 +10,26 @@
 
 <body>
 
+    <div id="alertbox" class="alert-box">
+        <button class="closebtn" id="closebtn" onclick="closealert()">X</button>
+        <br>
+        <span id="alert-text"></span>
+    </div>
+    <div id="alertbox2" class="alert-box">
+        <button class="closebtn" id="closebtn1" onclick="closealert1()">X</button>
+        <br>
+        <span id="alert-text">Do you want to register as new user?</span>
+        <div class="buttons">
+            <button id="Yesbtn" onclick="newUser()">Yes</button><button id="Nobtn"
+                onclick="cancelUser()">No</button>
+        </div>
+    </div>
     <div class="container">
         <div class="leftcontainer">
             <img src="image.png" alt="sampleimg">
         </div>
-        <div id="alertbox" class="alert-box">
-            <button class="closebtn" id="closebtn" onclick="closealert()">X</button>
-            <br>
-            <span id="alert-text"></span>
-        </div>
-        <div id="alertbox2" class="alert-box">
-            <button class="closebtn" id="closebtn1" onclick="closealert1()">X</button>
-            <br>
-            <span id="alert-text">Do you want to register as new user?</span>
-            <div class="buttons">
-                <button id="Yesbtn" onclick="newUser()">Yes</button><button id="Nobtn"
-                    onclick="cancelUser()">No</button>
-            </div>
-        </div>
         <div class="rightcontainer">
-            <form action="" method="post" id="loginvalform">
+            <form action="login.html" method="post" id="loginvalform">
                 <h1> Hey, hello &#9995; </h1>
                 <p id="subheader"> Enter the information you entered while registering </p>
                 <div class="mail">
@@ -41,20 +41,16 @@
                         <br>
                         <label for="psw"><b>Password</b></label><br>
                         <input type="password" name="psw" class="textbox" id="pwd" oninput="inputPass(event)"
-                            onkeydown="classRemoverPass()"> <br>
-                        <span id="passerror" class="error"></span>
+                            onkeydown="classRemoverPass()"> <br><span id="passerror" class="error"></span> <br>
+                        <span id="info" onclick="removeinfo()">i</span>&nbsp;
+                        <span id="passwordcriteria">Your password must be atleast 6 characters long and must contain 1 capital letter,1 special character in it.</span>
+                        <br>
                         <br>
                         <input type="checkbox" name="chkbox">
                         <label for="chkbox"><b>Remember me</b></label>
-                        <a href="#" class="fpass">Forgot password?</a>
-                        <br>
-                        <br>
-                        <button type="submit" class="button1" id="submitbtn" onclick="login(event)">SUBMIT</button>
-                        <br><br>
-                        <hr>
-                        <br>
-                        <a href="https://www.google.com/"><button type="button" class="button2"> Sign In with Google
-                            </button> </a>
+                        <a href="#" class="fpass">Forgot password?</a><br>                        
+                        <button type="submit" class="button1" id="submitbtn" onclick="login(event)">SUBMIT</button><br>
+                        <button type="button" class="button2" id="signupbtn" onclick="signup()">SIGN UP</button>
                     </div>
                 </div>
             </form>
@@ -63,7 +59,7 @@
     <script>
 
         const users = [];
-
+        
         let flag1 = 0;
         let flag2 = 0;
 
@@ -73,7 +69,9 @@
         let passwordValue = "";
         let emailError = document.getElementById("mailerror");
         let passwordError = document.getElementById("passerror")
-
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}]).{6,}$/;
+        
         function inputEmail(event) {
             emailValue = event.target.value;
         }
@@ -91,7 +89,6 @@
                 return;
             }
             else {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (emailRegex.test(emailValue)) {
                     emailInput.classList.remove('invalid');
                     emailError.textContent = '';
@@ -103,15 +100,15 @@
                     flag1 = 1;
                 }
 
-                if (passwordValue.length < 6) {
-                    passwordInput.classList.add('invalid');
-                    passwordError.textContent = 'Password must be atleast 6 characters long';
-                    flag2 = 1;
-
-                } else {
+                if (passRegex.test(passwordValue)) {
                     passwordInput.classList.remove('invalid');
                     passwordError.textContent = '';
                     flag2 = 0;
+                    
+                } else {
+                    passwordInput.classList.add('invalid');
+                    passwordError.textContent = 'Password does not meet the criteria';
+                    flag2 = 1;
                 }
 
                 if (emailValue == "") {
@@ -157,32 +154,43 @@
                 passwordInput.value=""
             }
             else {
-                inputEmail(event)
-                inputPass(event)
-                if (passwordValue.length > 5) {
+                // inputEmail(event)
+                // inputPass(event)
+                if (passwordValue.length>5) {
                     users.push({ email: emailValue, password: passwordValue })
                     showAlert("Successfully Registered the new user", "yes")
                     setTimeout(back, 2000);
                 }
                 else {
-                    showAlert("Password length should be greater than 6", "no")
+                    passwordInput.classList.add('invalid');
+                    passwordError.textContent = 'Password does not meet the criteria';
                 }
             }
         }
-
+        function signup(){
+            let b=document.getElementById("signupbtn")
+            if(b.innerHTML=="SIGN UP"){
+                newUser()
+            }
+            else if(b.innerHTML=="LOG IN"){
+                back();
+                
+            }
+        }
         function newUser() {
             const subheader = document.getElementById('subheader');
             subheader.textContent = "REGISTRATION FORM"
             document.getElementById("alertbox2").style.display = "none"
             document.getElementById("submitbtn").innerHTML = "REGISTER"
+            document.getElementById("signupbtn").innerHTML = "LOG IN"
             passwordInput.value = ''
-
         }
         function back() {
             let submitbutton = document.getElementById("submitbtn")
             let subheader = document.getElementById('subheader');
             subheader.textContent = "Enter the details you entered while registering"
             document.getElementById("submitbtn").innerHTML = "SUBMIT"
+            document.getElementById("signupbtn").innerHTML = "SIGN UP"
         }
         function showAlert(textmsg, status) {
             const alertbox = document.getElementById("alertbox")
@@ -198,7 +206,15 @@
             }
             alertbox.style.display = "block";
         }
-
+        function removeinfo(){
+            let a=document.getElementById("passwordcriteria")
+            if(a.style.visibility=="hidden"){
+                a.style.visibility="visible"
+            }
+            else{
+                a.style.visibility="hidden"
+            }
+        }
         function showAlertNew(textmsg) {
             const alertbox = document.getElementById("alertbox2")
             const alertmsg = document.getElementById("alert-text")
